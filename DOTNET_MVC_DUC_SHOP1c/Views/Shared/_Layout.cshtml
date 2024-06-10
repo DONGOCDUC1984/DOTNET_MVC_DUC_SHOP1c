@@ -1,0 +1,144 @@
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - DOTNET_MVC_DUC_SHOP1c</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+     @*This is for Bootstrap*@
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    @*This is for font*@
+    <link href="https://fonts.googleapis.com/css?family=Dancing Script&effect=neon|outline|emboss|shadow-multiple"
+          rel="stylesheet" />
+    @*This is for bootstrap icons*@
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    @*This is for font-awesome icons*@
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+    @*This is for chart*@
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @*The following line is for toast*@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    @*This is for sweet alert*@
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+   
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom
+            box-shadow nav-item dropdown mb-3 fixed-top">
+            <div class="container-fluid">
+                <span data-bs-toggle="offcanvas" data-bs-target="#left-offcanvas" style="font-size: 20px; cursor: pointer;
+                   float: left;color:white;margin:10px; ">&#9776</span>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/product/shop1.png" alt="Avatar Logo"
+                         style="width:50px; height:50px ;
+                        text-shadow: 3px 3px 3px #ababab; "
+                         class="rounded border border-primary">
+                    <span style="color: yellowgreen ;
+                        text-shadow: 3px 3px 3px #ababab;
+                       font-family: 'Trirong', serif;"
+                          class="mt-2">
+                        DUC SHOP
+                    </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between ml-3">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index"> <i class="fa fa-fw fa-home"></i> </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"> @localizer["Products"] </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Index" asp-route-categoryId=1>@localizer["Fruit And Vegetable"]  </a></li>
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Index" asp-route-categoryId=2>@localizer["Bread And Cake"]  </a></li>
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Index" asp-route-categoryId=3>@localizer["Milk"]  </a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">@localizer["Filter Price"]  </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Index" asp-route-minPrice=0 asp-route-maxPrice=3> $0-$3 </a></li>
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Index" asp-route-minPrice=3 asp-route-maxPrice=6> $3-$6 </a></li>
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Index" asp-route-minPrice=6 asp-route-maxPrice=9> $6-$9 </a></li>
+                            </ul>
+                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Admin  </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="Category" asp-action="Index">@localizer["Category"]  </a></li>
+                                    <li><a class="dropdown-item" asp-controller="ProvinceCity" asp-action="Index">@localizer["Province/City"]  </a></li>
+                                    <li><a class="dropdown-item" asp-controller="District" asp-action="Index">@localizer["District"]  </a></li>
+                                    <li><a class="dropdown-item" asp-controller="Order" asp-action="Index">@localizer["Order"]  </a></li>
+                                    <li><a class="dropdown-item" asp-controller="AnnualProfit" asp-action="ProfitChart">@localizer["Profit Chart"]  </a></li>
+                                </ul>
+                            </li>
+                        }
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Order" asp-action="GetListByUserId"> @localizer["My Orders"] </a>
+                            </li>
+                        }
+                        <li class="nav-link">
+                            <partial name="_Culture" />
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <partial name="_Notification" />
+            @RenderBody()
+        </main>
+    </div>
+    <partial name="left-offcanvas" />
+    <partial name="_footer" />
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+<script >
+    //If the page is loaded, GetCartLength() will be called
+    $(document).ready(function () {
+        GetCartLength();
+    });
+    // Get Cart's Length
+    function GetCartLength() {
+            var username = document.getElementById("username").innerHTML;
+            $.ajax({
+            url: "/Cart/GetCartLength",
+                type: "GET",
+                success: function (data) {
+                            document.getElementById("CartLength").innerHTML = data;
+                         }
+            });
+    };
+        
+
+</script>
+
+
+</html>

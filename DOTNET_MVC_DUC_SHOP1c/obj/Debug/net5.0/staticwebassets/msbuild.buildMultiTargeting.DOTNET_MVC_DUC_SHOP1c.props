@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\DOTNET_MVC_DUC_SHOP1c.props" />
+</Project>

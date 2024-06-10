@@ -1,0 +1,72 @@
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
+
+@{
+    ViewData["Title"] = "Category";
+}
+
+<div class="text-center">
+    <h1 class="display-4"> @localizer["Category"] </h1>
+</div>
+
+<p>
+    <button class="btn btn-primary" id="btnAdd">
+        <i class="fa-solid fa-plus"></i> @localizer["Create New"] 
+    </button>
+</p>
+
+<table class="table table-hover mx-auto w-50">
+    <thead>
+        <tr>
+            <th> Id </th>
+            <th> @localizer["Name"] </th>
+            <th> @localizer["Actions"] </th>
+        </tr>
+    </thead>
+    <tbody id="tbodyCategory">
+       
+    </tbody>
+</table>
+
+
+<!-- Add or Update Modal -->
+<div class="modal fade" id="AddUpdateModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title" id="ModalTitle" >  </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form id="EditForm" asp-controller="Category" asp-action="AddUpdate">
+                    <div class="mb-3 mt-3" id="Id_div">
+                        <label class="form-label">ID:</label>
+                        <input type="text" class="form-control" id="Id" readonly name="Id">
+                    </div>
+                    @* If I type the following line (input) instead of the above one (input),
+                    there will be an error.*@
+                    @* <input type="hidden" id="Id" />*@
+                    <div class="mb-3 mt-3">
+                        <label class="form-label"> @localizer["Name"]:</label>
+                        <input type="text" class="form-control" required
+                               placeholder="Enter Name" name="Name" id="Name">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="btnSave"> @localizer["Save"] </button>
+                </form>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"> @localizer["Close"]</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+     <script src="~/js/category.js"></script>
+}
