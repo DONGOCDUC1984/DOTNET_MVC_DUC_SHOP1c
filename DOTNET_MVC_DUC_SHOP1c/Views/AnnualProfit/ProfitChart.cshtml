@@ -1,0 +1,24 @@
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
+@{
+    ViewData["Title"] = "Profit Chart";
+}
+<div class="text-center">
+    <h1 class="display-4"> @localizer["Chart"] </h1>
+</div>
+<div class="row"> 
+    <p class="col-2"><b> @localizer["Chart type"] </b> </p>
+    <div class="col-2">
+        <select id="ChartType" class="form-select">
+            <option> bar </option>
+            <option> line </option>
+            <option> pie </option>
+            <option> doughnut </option>
+        </select>
+    </div>
+</div>
+<div id="ChartView"></div>
+@section Scripts {
+    <script src="~/js/ProfitChart.js"></script>
+}
+
+

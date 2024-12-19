@@ -1,0 +1,84 @@
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
+@model List<DOTNET_MVC_DUC_SHOP1c.Models.Order> 
+@{
+    ViewData["Title"] = "Order";
+}
+
+<div class="text-center">
+    <h1 class="display-4"> @localizer["Order"] </h1>
+</div>
+<p>
+    <a asp-action="PDFFile" class="btn btn-warning me-2">
+            <i class="fa-solid fa-file-pdf"></i> PDF File
+    </a>
+</p>
+@if (Model != null && Model.Count > 0)
+{
+    @foreach (var order in Model)
+    {
+        <h5>ID: @order.Id</h5>
+        <a onclick="return confirm('Are you sure that you really want to delete this ? ')"
+           href="/Order/Delete?id=@order.Id" class="btn btn-danger m-1">
+            <i class="fa-solid fa-trash"></i>
+            @localizer["Delete"]
+        </a>
+        <p>
+            <b>@localizer["At"]:</b>
+            @order.CreatedDate.ToString("dd-MM-yyyy")
+        </p>
+        <p>
+            <b>@localizer["Tel"]:</b> @order.UserTel
+        </p>
+        <p>
+            <b>@localizer["Address"]:</b> @order.UserAddress
+        </p>
+
+        <p>
+            <b>@localizer["Details"]: </b>
+        </p>
+        @if (order.OrderItems != null && order.OrderItems.Count > 0)
+        {
+            <table class="table table-bordered table-hover table-dark 
+                    table-striped shadow mx-auto ">
+                <thead>
+                    <tr>
+                        <th> Id </th>
+                        <th> @localizer["Name"] </th>
+                        <th> @localizer["Price"] </th>
+                        <th> @localizer["Quantity"] </th>
+                        <th> @localizer["Sum"] </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var orderItem in order.OrderItems)
+                    {
+                        <tr>
+                            <td>
+                                @orderItem.Product.Id
+                            </td>
+                            <td>
+                                 @orderItem.Product.Name
+                            </td>
+                            <td>
+                                @orderItem.Product.Price
+                            </td>
+                            <td>
+                                @orderItem.Quantity
+                            </td>
+                            <td>
+                                @(orderItem.Product.Price * orderItem.Quantity)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <p>
+                <b> @localizer["Total cost"]: </b> @order.totalCost
+            </p>
+            <hr />
+           
+        }
+    }
+   
+}
+

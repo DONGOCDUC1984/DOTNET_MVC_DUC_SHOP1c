@@ -1,0 +1,140 @@
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
+@model DOTNET_MVC_DUC_SHOP1c.Models.DTO.ProducDisplayModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@localizer["Products"]</h1>
+</div>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="AddUpdate" class="btn btn-primary me-2">
+            <i class="fa-solid fa-plus"></i> @localizer["Create New"]
+        </a>
+    </p>
+    <p>
+        <a asp-action="ExportToExcel" class="btn btn-success me-2">
+            <i class="fa-solid fa-file-excel"></i> @localizer["Export To Excel"]
+        </a>
+        @*  <a asp-action="Print" class="btn btn-primary me-2">
+            <i class="fa-solid fa-print"></i> @localizer["Print"]
+        </a> *@
+    </p>
+}
+
+<form asp-action="Index" class="row" >
+    <div class="col">
+        <label class="control-label">@localizer["Search"] </label>
+        <input type="text" class="form-control" name="searchStr" value="@Model.searchStr"
+               placeholder="Search" style="height: 40px" />
+    </div>
+    <div class="col">
+        <label class="control-label">@localizer["Category"]  </label>
+        <select name="categoryId" class="form-select" style="height: 40px">
+            <option disabled selected>--@localizer["Select"]--</option>
+            @foreach (var item in Model.Categories)
+            {
+                <option selected="@(item.Id == Model.categoryId)" value="@item.Id" >
+                    @item.Name
+                </option>
+            }
+        </select>
+        
+    </div>
+    <div class="col">
+        <label class="control-label">@localizer["Province/City"]  </label>
+        <select name="provinceCityId" class="form-select"
+                id="ProvinceCityId" style="height: 40px">
+            <option disabled selected>--@localizer["Select"]--</option>
+            @foreach (var item in Model.ProvinceCities)
+            {
+                <option selected="@(item.Id == Model.provinceCityId)" value="@item.Id">@item.Name</option>
+            }
+        </select>
+       
+    </div>
+    <div class="col">
+        <label class="control-label">@localizer["District"] </label>
+        <select name="districtId" class="form-select"
+                id="DistrictId" style="height: 40px">
+        </select>
+        <span  class="text-danger"></span>
+    </div>
+    <div class="col">
+        <label class="control-label">@localizer["Minimum Price"]</label>
+        <input type="number" class="form-control" name="minPrice" value="@Model.minPrice"
+               placeholder="Minimum Price" style="height: 40px" />
+    </div>
+    <div class="col">
+        <label class="control-label">@localizer["Maximum Price"]</label>
+        <input type="number" class="form-control" name="maxPrice" value="@Model.maxPrice"
+               placeholder="Maximum Price" style="height: 40px" />
+    </div>
+    
+    <div class="col">
+        <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-magnifying-glass"></i> @localizer["Search"]
+        </button>
+    </div>
+</form>
+
+<a asp-action="Index" class="btn btn-success my-2">
+    <i class="fa-solid fa-arrows-rotate"></i> @localizer["Reset"]
+</a>
+
+<div class="d-flex flex-wrap justify-content-center bg-light">
+    @foreach (var item in Model.Products )
+    {
+        <div class="card m-2 p-1 border" >
+            <img class="card-img-top my-1 mx-auto" src="@item.ImageUrl"
+                 alt="Card image" style="width:150px ;height: 200px">
+            <div class="card-body">
+            <h4 class="card-title">@item.Name</h4>
+            <p class="card-text"> <b> Id: </b> @item.Id </p>
+            <p class="card-text">
+                <b> @localizer["Category"]:  </b> <br />
+                @item.Category.Name
+            </p>
+            <p class="card-text"> <b>@localizer["Price"]: </b> $ @item.Price</p>
+            <button type="button" onclick="Add(@item.Id)" class="btn btn-primary m-1">
+                    <i class="fa-solid fa-cart-plus"></i> @localizer["Add to cart"]
+            </button>
+            <br />
+            <a asp-action="Details" asp-route-id="@item.Id"
+                   class="btn btn-success rounded m-1">
+                    <i class="fa-solid fa-circle-info"></i> @localizer["Details"]
+            </a> 
+          </div>
+        </div>    
+    }
+    
+</div>
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+    @for (int i = 1; i <= Model.totalPages; i++)
+    {
+        if (i == Model.currentPage)
+        {
+            <li class="page-item">
+                    <a href="/Home/Index?currentPage=@i&searchStr=@Model.searchStr&categoryId=@Model.categoryId&provinceCityId=@Model.provinceCityId&districtId=@Model.districtId&minPrice=@Model.minPrice&maxPrice=@Model.maxPrice"
+                       class="page-link active">@i </a>
+            </li>     
+
+        }
+        else
+        { 
+            <li class="page-item">
+                    <a href="/Home/Index?currentPage=@i&searchStr=@Model.searchStr&categoryId=@Model.categoryId&provinceCityId=@Model.provinceCityId&districtId=@Model.districtId&minPrice=@Model.minPrice&maxPrice=@Model.maxPrice"
+                       class="page-link">@i </a>
+            </li>
+        }
+    }
+
+  </ul>
+</nav>
+
+@section Scripts {
+     <script src="~/js/home.js"></script>
+}
